@@ -50,8 +50,8 @@ class PrepWidget(QtWidgets.QWidget):
         title2 = QtWidgets.QLabel("MCFLIRT (Step 6)")
         
         maskUseLabel = QtWidgets.QLabel("Do you want to use a BrainMask ?")
-        maskUseRadioYes = QtWidgets.QRadioButton("Yes")
-        maskUseRadioYes.setChecked(True)
+        self.maskUseRadioYes = QtWidgets.QRadioButton("Yes")
+        self.maskUseRadioYes.setChecked(True)
         maskUseRadioNo = QtWidgets.QRadioButton("No")
         
         comboMethod = QtWidgets.QComboBox()
@@ -62,7 +62,7 @@ class PrepWidget(QtWidgets.QWidget):
         
         hbox2.addWidget(maskUseLabel)
         hbox2.addStretch(1)
-        hbox2.addWidget(maskUseRadioYes)
+        hbox2.addWidget(self.maskUseRadioYes)
         hbox2.addStretch(1)
         hbox2.addWidget(maskUseRadioNo)
         hbox2.addStretch(1)
@@ -355,13 +355,12 @@ class PrepWidget(QtWidgets.QWidget):
         steps = stepTree.getroot()
         step1 = steps[1]
         
-        if self.fileName:
-            if not (step1.xpath("/Steps/step/xmlFile") == []):
-                xmlFiletr = step1[0]
-                xmlFiletr.text = self.fileName
-            else:
-                xmlFiletr = etree.SubElement(step1, "xmlFile")
-                xmlFiletr.text = self.fileName
+        if not (step1.getchildren() == []):
+            step1[1].text = self.fileName
+        else :
+            xmlFile = etree.SubElement(step1, "DTIPrep_XMLFile")
+            xmlFile.text = self.fileName
+            
         
         xmlFile = open("../PROTOCOLS/HARDIPrep_temp.xml", "w")
         xmlFile.write(etree.tostring(stepTree, pretty_print = True))

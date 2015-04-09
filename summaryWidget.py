@@ -47,3 +47,7 @@ class SumWidget(QtWidgets.QWidget):
         
         if fileName:
             self.inEdit.setText(fileName)
+            
+    def updateXML(self):
+
+        stepTree = etree.parse("../PROTOCOLS/HARDIPrep_temp.xml")
