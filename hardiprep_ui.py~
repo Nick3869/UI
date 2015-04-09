@@ -1,0 +1,134 @@
+# -*- coding: utf-8 -*-
+
+from PyQt5.QtWidgets import QApplication, QFileDialog, QWidget, QToolTip, QPushButton, QDesktopWidget, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout, QGridLayout, QMessageBox
+from PyQt5.QtCore import QObject, QDir, Qt
+from PyQt5.QtGui import QFont
+
+import os
+import glob
+import numpy as np
+import ntpath
+import time
+
+import introwidget 
+import widget0
+
+from lxml import etree
+
+import hardi.nrrd
+import hardi.io as hardiIO
+import hardi.qc as hardiQC
+
+class PrepWindow(QMainWindow):
+	
+	def __init__(self):
+		super(PrepWindow, self).__init__()
+		self.initUI()
+		
+	def initUI(self):
+		global k
+		k = 0
+		
+		self.createXML()
+		
+		self.widget = QWidget()
+		
+		self.cwidget = introwidget.MainWidget(self)
+		
+		self.next = QPushButton("Create your own Protocol")
+		self.next.setStatusTip('Proceed to next step')
+		self.next.clicked.connect(self.nextf)
+		
+		self.back = QPushButton("Back")
+		self.back.setStatusTip('Go back to previous step')
+		self.back.setVisible(False)
+		self.back.clicked.connect(self.backf)
+		
+		hbox = QHBoxLayout()
+		hbox.addStretch(1)
+		hbox.addWidget(self.back)
+		hbox.addWidget(self.next)
+		
+		self.wgrid = QGridLayout()
+		self.wgrid.addWidget(self.cwidget, 0, 0)
+		self.wgrid.addLayout(hbox, 1, 0)
+		
+		self.widget.setLayout(self.wgrid)
+		
+		self.setCentralWidget(self.widget)
+		
+		self.statusbar = self.statusBar()
+		
+		self.resize(500, 400)
+        	
+		self.setWindowTitle('HARDIPrep')    
+		self.show()
+		
+	def keyPressEvent(self, e):
+        	if e.key() == Qt.Key_Escape:
+        		self.close()
+        		
+        def nextf(self):
+        	global k
+        	k += 1
+        	
+        	self.next.setText("Next")
+        	self.back.setVisible(True)
+        	self.next.setVisible(True)
+        	self.changeWidget(k)
+        
+        def backf(self):
+        	global k
+        	k -= 1
+        	if not k:
+        		self.back.setVisible(False)
+        		self.next.setVisible(False)
+        	self.changeWidget(k)
+        		
+        def changeWidget(self, i):
+        	self.wgrid.removeWidget(self.cwidget)
+        	self.cwidget.hide()
+        	
+        	if i==0:
+        		self.cwidget = introwidget.MainWidget(self)
+        	elif i==1:
+        		self.cwidget = widget0.PrepWidget(self)
+        	else:
+        		self.cwidget = QWidget()
+        		
+        	self.wgrid.addWidget(self.cwidget, 0, 0)
+        	
+        def createXML(self):
+        	xmlTree = etree.Element("Steps")
+        	stepList = ["step 0", "step 1", "step 2", "step 3", "step 4", "step 5", "step 6", "step 7", "step 8", "step 9", "step 10", "step 11"]
+        	
+        	for step in stepList:
+        		step = etree.SubElement(xmlTree, "step")
+        	
+        	xmlFile = open("PROTOCOLS/HARDIPrep_temp.xml", "w")
+        	xmlFile.write(etree.tostring(xmlTree, pretty_print = True))
+        	xmlFile.close()
+        	
+        def closeEvent(self, event):
+        
+		reply = QMessageBox.question(self, 'Message',
+		    "Would you like to save protocol before quitting ?", QMessageBox.Discard | 
+		    QMessageBox.Save | QMessageBox.Cancel, QMessageBox.Save)
+
+		if reply == QMessageBox.Save:
+			event.accept()
+		elif reply == QMessageBox.Discard:
+			os.remove("PROTOCOLS/HARDIPrep_temp.xml")
+			event.accept()
+		else:
+			event.ignore()
+		
+        	
+		
+if __name__ == '__main__':
+	import sys
+
+	app = QApplication(sys.argv)
+	ex = PrepWindow()
+	sys.exit(app.exec_())
+	
