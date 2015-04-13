@@ -54,8 +54,8 @@ class PrepWidget(QtWidgets.QWidget):
         self.maskUseRadioYes.setChecked(True)
         maskUseRadioNo = QtWidgets.QRadioButton("No")
         
-        comboMethod = QtWidgets.QComboBox()
-        comboMethod.addItem("Trilinear", userData=None)
+        self.comboMethod = QtWidgets.QComboBox()
+        self.comboMethod.addItem("Trilinear", userData=None)
         methodLabel = QtWidgets.QLabel("Choose an interpolation method :")
         
         hbox2 = QtWidgets.QHBoxLayout()
@@ -70,7 +70,7 @@ class PrepWidget(QtWidgets.QWidget):
         hbox3 = QtWidgets.QHBoxLayout()
         
         hbox3.addWidget(methodLabel)
-        hbox3.addWidget(comboMethod)
+        hbox3.addWidget(self.comboMethod)
         
         vbox = QtWidgets.QVBoxLayout()
         vbox.addLayout(hbox2)
@@ -356,11 +356,27 @@ class PrepWidget(QtWidgets.QWidget):
         step1 = steps[1]
         
         if not (step1.getchildren() == []):
-            step1[1].text = self.fileName
+            step1[0].text = self.xmlEdit.text()
+            
+            if self.maskUseRadioYes.isChecked():
+                step1[1].text = "yes"
+            else:
+                step1[1].text = "no"
+                
+            step1[2].text = self.comboMethod.currentText()
+                
         else :
             xmlFile = etree.SubElement(step1, "DTIPrep_XMLFile")
-            xmlFile.text = self.fileName
+            xmlFile.text = self.xmlEdit.text()
             
+            maskUse = etree.SubElement(step1, "Mask_Use")
+            if self.maskUseRadioYes.isChecked():
+                maskUse.text = "yes"
+            else:
+                maskUse.text = "no" 
+                
+            method = etree.SubElement(step1, "method")
+            method.text = self.comboMethod.currentText()
         
         xmlFile = open("../PROTOCOLS/HARDIPrep_temp.xml", "w")
         xmlFile.write(etree.tostring(stepTree, pretty_print = True))
