@@ -19,9 +19,10 @@ class Ui_widget0(QWidget):
 	fileName = ""
 	def __init__(self, parent):
 		super(Ui_widget0, self).__init__(parent)
-		self.setupUi()
+		parent.next.setEnabled(False)
+		self.setupUi(parent)
 	
-	def setupUi(self):
+	def setupUi(self, parent):
 		
 		self.vlayout = QtWidgets.QVBoxLayout()
 		self.hlayout = QtWidgets.QHBoxLayout()
@@ -38,6 +39,10 @@ class Ui_widget0(QWidget):
 		self.combo.addItem("Step 5 :")
 		self.combo.addItem("Step 6 :")
 		self.combo.addItem("Step 7 :")
+		self.combo.addItem("Step 8 :")
+		self.combo.addItem("Step 9 :")
+		self.combo.addItem("Step 10 :")
+		self.combo.addItem("Step 11 :")
 		
 		self.multipleRadio = QtWidgets.QRadioButton("Directory")
 		self.gridLayout.addWidget(self.multipleRadio, 3, 1, 1, 1)
@@ -46,7 +51,7 @@ class Ui_widget0(QWidget):
 		self.multipleBrowse = QtWidgets.QPushButton("Browse")
 		self.gridLayout.addWidget(self.multipleBrowse, 3, 3, 1, 1)
 		self.multipleBrowse.setEnabled(False)
-		self.multipleBrowse.clicked.connect(self.browseDir)
+		self.multipleBrowse.clicked.connect(lambda: self.browseDir(parent))
 		
 		self.singleEdit = QtWidgets.QLineEdit()
 		self.gridLayout.addWidget(self.singleEdit, 1, 2, 1, 1)
@@ -55,7 +60,7 @@ class Ui_widget0(QWidget):
 		self.singleBrowse = QtWidgets.QPushButton("Browse")
 		self.gridLayout.addWidget(self.singleBrowse, 1, 3, 1, 1)
 		self.singleBrowse.setEnabled(False)
-		self.singleBrowse.clicked.connect(self.browse)
+		self.singleBrowse.clicked.connect(lambda: self.browse(parent))
 		
 		self.singleRadio = QtWidgets.QRadioButton("Single file")
 		self.gridLayout.addWidget(self.singleRadio, 1, 1, 1, 1)
@@ -106,19 +111,21 @@ class Ui_widget0(QWidget):
 		self.singleEdit.setEnabled(False)
 		self.singleBrowse.setEnabled(False)
 		
-	def browse(self):
+	def browse(self, parent):
 		
 		self.fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open File",".","*.nrrd")
 		
 		if self.fileName:
 			self.singleEdit.setText(self.fileName)
+			parent.next.setEnabled(True)
 			
-	def browseDir(self):
+	def browseDir(self, parent):
 		
 		self.fileName = QtWidgets.QFileDialog.getExistingDirectory(self, caption='Choose directory', directory='.')
 				
 		if self.fileName:
 			self.multipleEdit.setText(self.fileName)
+			parent.next.setEnabled(True)
 
 			
 	def loadXML(self):
@@ -127,7 +134,7 @@ class Ui_widget0(QWidget):
 		steps = stepTree.getroot()
 		step0 = steps[0]
 		
-		if not (step0.xpath("/Steps/step/Files") == []):
+		if not (step0.getchildren() == []):
 		    path = step0[0]
 		    
 		    if not (path.text == "t"):

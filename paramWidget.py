@@ -364,6 +364,52 @@ class PrepWidget(QtWidgets.QWidget):
                 step1[1].text = "no"
                 
             step1[2].text = self.comboMethod.currentText()
+            
+            step1[3].text = self.estRadXedit.text()
+            
+            step1[4].text = self.estRadYedit.text()
+        
+            step1[5].text = self.estRadZedit.text()
+            
+            step1[6].text = self.filtRadXedit.text()
+            
+            step1[7].text = self.filtRadYedit.text()
+            
+            step1[8].text = self.filtRadZedit.text()
+            
+            step1[9].text = self.numberItedit.text()
+            
+            step1[10].text = self.minVoxEstedit.text()
+            
+            step1[11].text = self.minVoxFiltedit.text()
+            
+            step1[12].text = self.histResedit.text()
+            
+            step1[13].text = self.minStdedit.text()
+            
+            step1[14].text = self.maxStdedit.text()
+            
+            step1[15].text = self.absValedit.text()
+            
+            step1[16].text = self.imDimEdit.text()
+            
+            step1[17].text = self.shrinkFactEdit.text()
+            
+            step1[18].text = self.bsplineFitEdit.text()
+            
+            step1[19].text = self.neighDirEdit.text()
+            
+            step1[20].text = self.estRadXedit9.text()
+            
+            step1[21].text = self.estRadYedit9.text()
+        
+            step1[22].text = self.estRadZedit9.text()
+            
+            step1[23].text = self.filtRadXedit9.text()
+            
+            step1[24].text = self.filtRadYedit9.text()
+            
+            step1[25].text = self.filtRadZedit9.text()
                 
         else :
             xmlFile = etree.SubElement(step1, "DTIPrep_XMLFile")
@@ -377,6 +423,75 @@ class PrepWidget(QtWidgets.QWidget):
                 
             method = etree.SubElement(step1, "method")
             method.text = self.comboMethod.currentText()
+            
+            estradX = etree.SubElement(step1, "estradX")
+            estradX.text = self.estRadXedit.text()
+            
+            estradY = etree.SubElement(step1, "estradY")
+            estradY.text = self.estRadYedit.text()
+            
+            estradZ = etree.SubElement(step1, "estradZ")
+            estradZ.text = self.estRadZedit.text()
+            
+            filtradX = etree.SubElement(step1, "filtradX")
+            filtradX.text = self.filtRadXedit.text()
+            
+            filtradY = etree.SubElement(step1, "filtradY")
+            filtradY.text = self.filtRadYedit.text()
+            
+            filtradZ = etree.SubElement(step1, "filtradZ")
+            filtradZ.text = self.filtRadZedit.text()
+            
+            nbIt = etree.SubElement(step1, "NbIt")
+            nbIt.text = self.numberItedit.text()
+            
+            voxEst = etree.SubElement(step1, "minVoxEst")
+            voxEst.text = self.minVoxEstedit.text()
+            
+            voxFilt = etree.SubElement(step1, "minVoxFilt")
+            voxFilt.text = self.minVoxFiltedit.text()
+            
+            histRes = etree.SubElement(step1, "histRes")
+            histRes.text = self.histResedit.text()
+            
+            minStd = etree.SubElement(step1, "minStd")
+            minStd.text = self.minStdedit.text()
+            
+            maxStd = etree.SubElement(step1, "maxStd")
+            maxStd.text = self.maxStdedit.text()
+            
+            absVal = etree.SubElement(step1, "absVal")
+            absVal.text = self.absValedit.text()
+            
+            imDim = etree.SubElement(step1, "imDim")
+            imDim.text = self.imDimEdit.text()
+            
+            shrinkF = etree.SubElement(step1, "shrinkF")
+            shrinkF.text = self.shrinkFactEdit.text()
+            
+            bsplineFit = etree.SubElement(step1, "bsplineFit")
+            bsplineFit.text = self.bsplineFitEdit.text()
+            
+            neighDir = etree.SubElement(step1, "numbNeighboringDir")
+            neighDir.text = self.neighDirEdit.text()
+            
+            estradX9 = etree.SubElement(step1, "estradX9")
+            estradX9.text = self.estRadXedit9.text()
+            
+            estradY9 = etree.SubElement(step1, "estradY9")
+            estradY9.text = self.estRadYedit9.text()
+            
+            estradZ9 = etree.SubElement(step1, "estradZ9")
+            estradZ9.text = self.estRadZedit9.text()
+            
+            filtradX9 = etree.SubElement(step1, "filtradX9")
+            filtradX9.text = self.filtRadXedit9.text()
+            
+            filtradY9 = etree.SubElement(step1, "filtradY9")
+            filtradY9.text = self.filtRadYedit9.text()
+            
+            filtradZ9 = etree.SubElement(step1, "filtradZ9")
+            filtradZ9.text = self.filtRadZedit9.text()
         
         xmlFile = open("../PROTOCOLS/HARDIPrep_temp.xml", "w")
         xmlFile.write(etree.tostring(stepTree, pretty_print = True))
