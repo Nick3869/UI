@@ -1,20 +1,18 @@
 from PyQt5 import QtWidgets
+from lxml import etree
+import os
 
 class SumWidget(QtWidgets.QWidget):
     def __init__(self, parent):
         super(SumWidget, self).__init__(parent)
-        self.initWidget()
+        self.initWidget(parent)
 
-    def initWidget(self):
+    def initWidget(self, parent):
         self.browseb = QtWidgets.QPushButton('Browse')
-        self.browseinput = QtWidgets.QPushButton('Browse')
-        self.browseb.clicked.connect(self.browse)
-        self.browseinput.clicked.connect(self.browseInput)
-        
-        self.inEdit = QtWidgets.QLineEdit()
+        self.browseb.clicked.connect(lambda: self.browse(parent))
+
         self.proEdit = QtWidgets.QLineEdit()
         
-        self.source = QtWidgets.QLabel('Input')
         self.protocol = QtWidgets.QLabel('Protocol')
         
         grid1 = QtWidgets.QGridLayout()
@@ -24,9 +22,6 @@ class SumWidget(QtWidgets.QWidget):
         grid1.setRowStretch(3,1)
         grid1.setRowStretch(0,1)
         
-        grid1.addWidget(self.source,1,0)
-        grid1.addWidget(self.inEdit,1,1)
-        grid1.addWidget(self.browseinput,1,2)
         
         grid1.addWidget(self.protocol,2,0)
         grid1.addWidget(self.proEdit,2,1)
@@ -34,20 +29,20 @@ class SumWidget(QtWidgets.QWidget):
         
         self.setLayout(grid1)
         
-    def browse(self):
+    def browse(self, parent):
     
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open File",".","*.xml")
         
         if fileName:
             self.proEdit.setText(fileName)
+            self.updateXML(parent)
             
-    def browseInput(self):
-    
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Choose File",".","*.nrrd")
-        
-        if fileName:
-            self.inEdit.setText(fileName)
             
-    def updateXML(self):
+    def updateXML(self, parent):
 
+        parent.xmlSaved = True
         stepTree = etree.parse("../PROTOCOLS/HARDIPrep_temp.xml")
+        xmlFile = open(self.proEdit.text(), "w")
+        xmlFile.write(etree.tostring(stepTree, pretty_print = True))
+        xmlFile.close()
+        os.remove("../PROTOCOLS/HARDIPrep_temp.xml")

@@ -349,8 +349,9 @@ class PrepWidget(QtWidgets.QWidget):
             path = step1[0]
             self.xmlEdit.setText(path.text)
         
-    def updateXML(self):
+    def updateXML(self, parent):
 
+        parent.xmlSaved = True
         stepTree = etree.parse("../PROTOCOLS/HARDIPrep_temp.xml")
         steps = stepTree.getroot()
         step1 = steps[1]

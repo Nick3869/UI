@@ -93,7 +93,8 @@ class PrepWindow(QMainWindow):
 			self.back.setText("Back")
 			
 		if k>1:
-			self.cwidget.updateXML()
+			self.cwidget.updateXML(self)
+			self.xmlSaved = False
 				
 		if not k:
 			self.next.setText("Create your own Protocol")
@@ -104,7 +105,7 @@ class PrepWindow(QMainWindow):
 			self.next.clicked.connect(self.nextf)
 		elif k==3:
 			self.next.setText("Run")
-			self.next.clicked.connect(self.runLoaded)
+			self.next.clicked.connect(self.runCreated)
 			self.next.clicked.disconnect(self.nextf)
 			
 		self.changeWidget(k)
@@ -173,7 +174,7 @@ class PrepWindow(QMainWindow):
 			    QMessageBox.Save | QMessageBox.Cancel, QMessageBox.Save)
 	
 			if reply == QMessageBox.Save:
-				self.cwidget.updateXML()
+				self.cwidget.updateXML(self)
 				xmlFile1 = open("../PROTOCOLS/HARDIPrep.xml", "w")
 				stepTree = etree.parse("../PROTOCOLS/HARDIPrep_temp.xml")
 				xmlFile1.write(etree.tostring(stepTree, pretty_print=True))
@@ -199,6 +200,16 @@ class PrepWindow(QMainWindow):
 			print("Run if you can !")
 		else:
 			QMessageBox.warning(self, "Error", "Choose an input Directory !", buttons=QMessageBox.Ok)
+			
+	def runCreated(self):
+
+		
+		proText = self.cwidget.proEdit.text()
+		
+		if (proText != ""):
+			print("Run ! You fool !")
+		else:
+			QMessageBox.warning(self, "Error", "Choose a valid protocol name !", buttons=QMessageBox.Ok)
 		
 		
 if __name__ == '__main__':

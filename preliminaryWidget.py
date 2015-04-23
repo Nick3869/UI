@@ -143,8 +143,9 @@ class Ui_widget0(QWidget):
 			    else:
 			    	self.singleEdit.setText(path.text)
         
-	def updateXML(self):	
+	def updateXML(self, parent):	
 		
+		parent.xmlSaved = True
 		stepTree = etree.parse("../PROTOCOLS/HARDIPrep_temp.xml")
 		steps = stepTree.getroot()
 		step0 = steps[0]
