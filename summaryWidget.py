@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, Qt
 from lxml import etree
 import os
 
@@ -12,7 +12,7 @@ class SumWidget(QtWidgets.QWidget):
         self.browseb.clicked.connect(lambda: self.browse(parent))
 
         self.proEdit = QtWidgets.QLineEdit()
-        
+        self.text = QtWidgets.QTextEdit()
         self.protocol = QtWidgets.QLabel('Protocol')
         
         grid1 = QtWidgets.QGridLayout()
@@ -22,7 +22,7 @@ class SumWidget(QtWidgets.QWidget):
         grid1.setRowStretch(3,1)
         grid1.setRowStretch(0,1)
         
-        
+        grid1.addWidget(self.text,1,0,1,3)
         grid1.addWidget(self.protocol,2,0)
         grid1.addWidget(self.proEdit,2,1)
         grid1.addWidget(self.browseb,2,2)

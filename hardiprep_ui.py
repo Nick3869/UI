@@ -18,6 +18,7 @@ import glob
 import numpy as np
 import ntpath
 import time
+import subprocess
 
 import loadProtocol
 import preliminaryWidget, paramWidget, summaryWidget
@@ -207,7 +208,8 @@ class PrepWindow(QMainWindow):
 		proText = self.cwidget.proEdit.text()
 		
 		if (proText != ""):
-			print("Run ! You fool !")
+			proc = subprocess.Popen(["python", "test.py"], stdout=self.out).pid
+			
 		else:
 			QMessageBox.warning(self, "Error", "Choose a valid protocol name !", buttons=QMessageBox.Ok)
 		
