@@ -23,6 +23,8 @@ class PrepWidget(QtWidgets.QWidget):
         
         tab = QtWidgets.QTabWidget()
         
+        simpleScroll = QtWidgets.QScrollArea()
+        advancedScroll = QtWidgets.QScrollArea()
         simpleWidget = QtWidgets.QWidget()
         advancedWidget = QtWidgets.QWidget()
         
@@ -319,8 +321,11 @@ class PrepWidget(QtWidgets.QWidget):
         
         advancedWidget.setLayout(advancedLayout)
         
-        tab.addTab(simpleWidget, "Basic Options")
-        tab.addTab(advancedWidget, "Advanced Options")
+        simpleScroll.setWidget(simpleWidget)
+        advancedScroll.setWidget(advancedWidget)
+        
+        tab.addTab(simpleScroll, "Basic Options")
+        tab.addTab(advancedScroll, "Advanced Options")
         
         t = QtWidgets.QHBoxLayout()
         t.addWidget(tab)
