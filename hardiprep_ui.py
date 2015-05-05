@@ -7,6 +7,9 @@
  University of Utah
  02/17/2015
  
+ This module is supposed to define the main window used for HARDIPrep
+ It defines the methods to communicate to the inner widgets, and to start exterior programs
+ 
 """
 
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMainWindow, QHBoxLayout, QGridLayout, QMessageBox, QLabel
@@ -27,6 +30,11 @@ from lxml import etree
 
 from PyQt5.Qt import QDialog
 
+""" 
+	This class is the main point of the GUI
+	It hosts all the widgets where we choose the parameters for the protocol
+	It also manages the different subprocesses that we use 
+"""
 class PrepWindow(QMainWindow):
 	
 	xmlFile = str()
@@ -38,28 +46,37 @@ class PrepWindow(QMainWindow):
 		self.initUI()
 		
 	def initUI(self):
-		
+		""" 
+		initializing the variable that shows where we are in the GUI
+		every cwidget (see below) is associated to a special k value
+		"""
 		global k
 		k = 0
 		
 		self.createXML()
 		
+		""" the container widget that will contain the cwidget, and the navigation buttons """
 		self.widget = QWidget()
 		
-		self.cwidget = QLabel()
-		pix = QPixmap("logo.png")
+		""" cwidget is the widget that will load the different tabs successively """
+		self.cwidget = QLabel() # we initialize it with an image
+		pix = QPixmap("logo.png") 
 		self.cwidget.setPixmap(pix)
 		
+		""" the statusbar that shows the tooltips associated to all the other components of the window """
 		self.statusbar = self.statusBar()
 		
+		""" the next button that will load the new cwidget """
 		self.next = QPushButton("Create your own Protocol")
 		self.next.setStatusTip('Proceed to next step')
 		self.next.clicked.connect(self.nextf)
 		
+		""" same as next button but to go back one step """
 		self.back = QPushButton("Load existing Protocol")
 		self.back.setStatusTip('Go back to previous step')
 		self.back.clicked.connect(self.backf)
 		
+		""" taking care of the Layout """
 		hbox = QHBoxLayout()
 		hbox.addWidget(self.back)
 		hbox.addStretch(1)
@@ -73,16 +90,23 @@ class PrepWindow(QMainWindow):
 		
 		self.setCentralWidget(self.widget)
 		
-		self.resize(600, 900)
-		
 		self.setWindowTitle('HARDIPrep')    
 		self.show()
 		
+		
+	"""
+		to make it possible to quit by using "escape"
+	"""
 	def keyPressEvent(self, e):
 		
 		if e.key() == Qt.Key_Escape:
 			self.close()
 			
+			
+	"""
+		The fonction that loads the next cwidget
+		see the doc for further explanations
+	"""		
 	def nextf(self):
 		
 		global k
@@ -111,6 +135,10 @@ class PrepWindow(QMainWindow):
 			
 		self.changeWidget(k)
 	
+	"""
+		The fonction that loads the previous cwidget
+		see the doc for further explanations
+	"""
 	def backf(self):
 		
 		global k
@@ -163,7 +191,7 @@ class PrepWindow(QMainWindow):
 		for step in stepList:
 			etree.SubElement(xmlTree, "step", stage=step)
 		
-		xmlFile = open("../PROTOCOLS/HARDIPrep_temp.xml", "w")
+		xmlFile = open("../Commandline/PROTOCOLS/HARDIPrep_temp.xml", "w")
 		xmlFile.write(etree.tostring(xmlTree, pretty_print = True))
 		xmlFile.close()
 		
@@ -176,19 +204,22 @@ class PrepWindow(QMainWindow):
 	
 			if reply == QMessageBox.Save:
 				self.cwidget.updateXML(self)
-				xmlFile1 = open("../PROTOCOLS/HARDIPrep.xml", "w")
-				stepTree = etree.parse("../PROTOCOLS/HARDIPrep_temp.xml")
+				xmlFile1 = open("../Commandline/PROTOCOLS/HARDIPrep.xml", "w")
+				stepTree = etree.parse("../Commandline/PROTOCOLS/HARDIPrep_temp.xml")
 				xmlFile1.write(etree.tostring(stepTree, pretty_print=True))
 				xmlFile1.close()
-				os.remove("../PROTOCOLS/HARDIPrep_temp.xml")
+				os.remove("../Commandline/PROTOCOLS/HARDIPrep_temp.xml")
+				os.remove(".out.txt")
 				event.accept()
 			elif reply == QMessageBox.Discard:
-				os.remove("../PROTOCOLS/HARDIPrep_temp.xml")
+				os.remove("../Commandline/PROTOCOLS/HARDIPrep_temp.xml")
+				os.remove(".out.txt")
 				event.accept()
 			else:
 				event.ignore()
 		else:
-			os.remove("../PROTOCOLS/HARDIPrep_temp.xml")
+			os.remove("../Commandline/PROTOCOLS/HARDIPrep_temp.xml")
+			os.remove(".out.txt")
 		
 	def runLoaded(self):
 		
@@ -204,15 +235,20 @@ class PrepWindow(QMainWindow):
 			
 	def runCreated(self):
 
-		
 		proText = self.cwidget.proEdit.text()
 		
 		if (proText != ""):
-			proc = subprocess.Popen(["python", "test.py"], stdout=self.out).pid
+			proc = subprocess.Popen(["python", "test.py"], stdout=subprocess.PIPE)
+			while True:
+				line = proc.stdout.readline()
+				if not line: break
+				self.cwidget.text.append(line)
 			
 		else:
 			QMessageBox.warning(self, "Error", "Choose a valid protocol name !", buttons=QMessageBox.Ok)
 		
+	def test(self):
+		print "yeah"
 		
 if __name__ == '__main__':
 	import sys

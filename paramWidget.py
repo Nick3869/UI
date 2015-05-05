@@ -271,7 +271,7 @@ class PrepWidget(QtWidgets.QWidget):
         imDimHelp.setPixmap(map)
         
         shrinkFactLabel = QtWidgets.QLabel("Shrink factor =")
-        self.shrinkFactEdit = QtWidgets.QLineEdit("3")
+        self.shrinkFactEdit = QtWidgets.QLineEdit("1")
         shrinkFactHelp = QtWidgets.QLabel()
         shrinkFactHelp.setPixmap(map)
         
@@ -338,7 +338,7 @@ class PrepWidget(QtWidgets.QWidget):
         
     def browse(self):
         
-        self.fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open File","../PROTOCOLS","*.xml")
+        self.fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open File","../Commandline/PROTOCOLS","*.xml")
     
         if self.fileName:
             self.xmlEdit.setText(self.fileName)
@@ -346,7 +346,7 @@ class PrepWidget(QtWidgets.QWidget):
             
     def loadXML(self):
 
-        stepTree = etree.parse("../PROTOCOLS/HARDIPrep_temp.xml")
+        stepTree = etree.parse("../Commandline/PROTOCOLS/HARDIPrep_temp.xml")
         steps = stepTree.getroot()
         step1 = steps[0]
         
@@ -357,7 +357,7 @@ class PrepWidget(QtWidgets.QWidget):
     def updateXML(self, parent):
 
         parent.xmlSaved = True
-        stepTree = etree.parse("../PROTOCOLS/HARDIPrep_temp.xml")
+        stepTree = etree.parse("../Commandline/PROTOCOLS/HARDIPrep_temp.xml")
         steps = stepTree.getroot()
         step1 = steps[1]
         
@@ -499,7 +499,7 @@ class PrepWidget(QtWidgets.QWidget):
             filtradZ9 = etree.SubElement(step1, "filtradZ9")
             filtradZ9.text = self.filtRadZedit9.text()
         
-        xmlFile = open("../PROTOCOLS/HARDIPrep_temp.xml", "w")
+        xmlFile = open("../Commandline/PROTOCOLS/HARDIPrep_temp.xml", "w")
         xmlFile.write(etree.tostring(stepTree, pretty_print = True))
         xmlFile.close()
         
