@@ -161,6 +161,11 @@ class PrepWindow(QMainWindow):
 			self.next.clicked.connect(self.nextf)
 		self.changeWidget(k)
 			
+	"""
+		The function that loads the new widget
+		relies on the global variable k set as the i parameter
+		further explanations in the doc
+	""" 
 	def changeWidget(self, i):
 		
 		self.wgrid.removeWidget(self.cwidget)
@@ -183,6 +188,9 @@ class PrepWindow(QMainWindow):
 			
 		self.wgrid.addWidget(self.cwidget, 0, 0)
 		
+	"""
+		creating the temporary xml file
+	"""
 	def createXML(self):
 		
 		xmlTree = etree.Element("Steps")
@@ -195,6 +203,10 @@ class PrepWindow(QMainWindow):
 		xmlFile.write(etree.tostring(xmlTree, pretty_print = True))
 		xmlFile.close()
 		
+	"""
+		this functions launches a QMessageBox, in case the protocol wasn't saved
+		so that the user can save it before quitting
+	"""
 	def closeEvent(self, event):
 	
 		if not self.xmlSaved:
@@ -221,6 +233,9 @@ class PrepWindow(QMainWindow):
 			os.remove("../Commandline/PROTOCOLS/HARDIPrep_temp.xml")
 			os.remove(".out.txt")
 		
+	"""
+		run a protocol already existing (from loadProtocol widget)
+	"""
 	def runLoaded(self):
 		
 		inText = self.cwidget.inEdit.text()
@@ -233,6 +248,9 @@ class PrepWindow(QMainWindow):
 		else:
 			QMessageBox.warning(self, "Error", "Choose an input Directory !", buttons=QMessageBox.Ok)
 			
+	"""
+		Run the protocol we just created (from summaryWidget)
+	"""
 	def runCreated(self):
 
 		proText = self.cwidget.proEdit.text()
